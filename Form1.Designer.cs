@@ -63,6 +63,7 @@
             this.tttttt = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.timer2 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxIpl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxIpl2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxIpl4)).BeginInit();
@@ -108,6 +109,7 @@
             this.button1.TabIndex = 2;
             this.button1.Text = "녹화";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
             // pictureBoxIpl2
             // 
@@ -136,6 +138,7 @@
             this.button2.TabIndex = 7;
             this.button2.Text = "중지";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click_1);
             // 
             // tableLayoutPanel1
             // 
@@ -401,6 +404,8 @@
             this.tttttt.Name = "tttttt";
             this.tttttt.Size = new System.Drawing.Size(173, 28);
             this.tttttt.TabIndex = 23;
+            this.tttttt.Visible = false;
+            this.tttttt.TextChanged += new System.EventHandler(this.tttttt_TextChanged);
             // 
             // label4
             // 
@@ -426,6 +431,11 @@
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 60F));
             this.tableLayoutPanel4.Size = new System.Drawing.Size(455, 68);
             this.tableLayoutPanel4.TabIndex = 27;
+            // 
+            // timer2
+            // 
+            this.timer2.Interval = 33;
+            this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
             // 
             // Form1
             // 
@@ -506,6 +516,7 @@
         private System.Windows.Forms.TextBox tttttt;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
+        private System.Windows.Forms.Timer timer2;
     }
 }
 

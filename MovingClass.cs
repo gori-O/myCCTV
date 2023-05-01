@@ -11,13 +11,13 @@ namespace MyCCTV
     {
         IplImage gray;
         public IplImage optical;
-        bool detected = false;
         public IplImage GrayScale(IplImage src)
         {
             gray = new IplImage(src.Size, BitDepth.U8, 1);
             Cv.CvtColor(src, gray, ColorConversion.BgrToGray);
             return gray;
         }
+        int detected = 0;
         public IplImage OpticalFlowLK(IplImage previous, IplImage current)
         {
             IplImage prev = this.GrayScale(previous);
@@ -34,27 +34,29 @@ namespace MyCCTV
             vely.SetZero();
 
             Cv.CalcOpticalFlowLK(prev,currn,new CvSize(15,15),velx, vely);
-            for(int i=0;i<cols;i+=15)
+            detected = 0;
+            for (int i=0;i<cols;i+=15)
             {
-                detected = false;
                 for (int j=0; j<rows;j+=15)
                 {
                     int dx = (int)Cv.GetReal2D(velx, j, i);
                     int dy = (int)Cv.GetReal2D(vely, j, i);
 
                     Cv.DrawCircle(optical, i, j, 1, CvColor.Red);
-                    if(Math.Abs(dx)<30&&Math.Abs(dy)<30)
+
+                    if (Math.Abs(dx)<30&&Math.Abs(dy)<30)
                     {
                         if (Math.Abs(dx) < 10 && Math.Abs(dy) < 10) continue;
-                        detected = true;
+
                         Cv.DrawLine(optical, new CvPoint(i, j), new CvPoint(i + dx, j + dy), CvColor.Blue, 1, LineType.AntiAlias);
                         Cv.DrawCircle(optical, new CvPoint(i + dx, j + dy), 3, CvColor.Blue, -1);
+                        detected = Math.Abs(dx);
                     }
                 }
             }
             return optical;
         }
-        public bool moving_detected()
+        public int moving_detected()
         {
             return detected;
         }

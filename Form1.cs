@@ -2,6 +2,7 @@
 using OpenCvSharp.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -46,8 +47,10 @@ namespace MyCCTV
         IplImage prev = new IplImage(new CvSize(640, 480), BitDepth.U8, 3);
         IplImage curr = new IplImage(new CvSize(640, 480), BitDepth.U8, 3);
         bool start = false;
+        int count_for_detect = 0;
         private void timer1_Tick(object sender, EventArgs e)
         {
+
             // 현재시각
             timenow = DateTime.Now;
             lblTime.Text = "현재시각 : " + timenow.ToString();
@@ -82,6 +85,16 @@ namespace MyCCTV
                 pictureBoxIpl4.ImageIpl = flowimg;
             }
             tttttt.Text = opticalflow.moving_detected().ToString();
+            count_for_detect++;
+            if(checkBox1.Checked)
+            {
+                if (opticalflow.moving_detected() != 0 && count_for_detect >= 66)
+                {
+                    tboxLog.Text += (DateTime.Now.ToString("MM-d-HH:mm:ss ") + "\r\n움직이는 물체가 감지되었습니다!!");
+                    count_for_detect = 0;
+                }
+            }
+
             start = true;
             dst.Dispose();
         }
@@ -133,7 +146,6 @@ namespace MyCCTV
 
         private void button3_Click(object sender, EventArgs e)
         {
-            
             string save_name = DateTime.Now.ToString("yyyy_MM_dd_hh시mm분ss초");
             Cv.SaveImage(tboxFilePath.Text + "\\" + save_name + ".jpg", dst.PutText(dst.GammaCorrect(src, gamma_control)));
             tboxLog.Text += DateTime.Now.ToString("g") + "_캡쳐되었습니다.\r\n";
@@ -176,6 +188,32 @@ namespace MyCCTV
             {
                 tboxFilePath.Text = fd.SelectedPath;
             }
+        }
+        CvVideoWriter Opencv_video;
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            timer2.Enabled = true;
+            tboxLog.Text += DateTime.Now.ToString("g") + "녹화를 시작합니다..\r\n";
+            string save_name = DateTime.Now.ToString("yyyy-MM-dd-hh시mm분ss초");
+            Opencv_video = new CvVideoWriter("C:\\workSpace\\MyCCTV\\Record\\" + save_name + ".avi", "XVID", 15, Cv.GetSize(src));
+        }
+
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            timer2.Enabled = false;
+            tboxLog.Text += DateTime.Now.ToString("g") + "녹화종료. 영상이 저장됐습니다.\r\n";
+        }
+
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            src = capture.QueryFrame();
+            Opencv_video.WriteFrame(src);
+        }
+
+        private void tttttt_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
